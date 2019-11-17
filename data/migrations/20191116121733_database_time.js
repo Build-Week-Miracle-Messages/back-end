@@ -29,7 +29,7 @@ exports.up = function(knex) {
       .unsigned()
       .notNullable()
       .references('id')
-      .inTable('users')
+      .inTable('person')
       .onUpdate('CASCADE')
       .onDelete('RESTRICT')
       tbl.boolean('sensitive').notNullable().default(false)
