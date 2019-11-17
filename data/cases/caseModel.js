@@ -6,7 +6,8 @@ module.exports = {
     addConnect,
     add,
     remove,
-    removePerson
+    removePerson,
+    getById
 }
 
 // function get(){
@@ -15,14 +16,11 @@ module.exports = {
 
 function addCase(obj){
     // should only be accessed through add case
-    // console.log('case',obj)
-    console.log(obj)
     return db('cases').insert({...obj, id:4})
 }
 
 function addConnect(obj){
     //should only be accessed through add case 
-    // console.log('connect',obj)
     return  db('connect').insert(obj)
 }
 
@@ -39,7 +37,11 @@ function removePerson(id){
     return db('person').where({id}).del()
 }
 
-function get(){
+function get(id){
     //should show the list of people who's information is not private
-    return db('person as p').join('cases as c', 'p.id', 'c.person_id').where({['c.sensitive']:false}).select('p.*')
+    return db('person as p').join('cases as c', 'p.id', 'c.person_id').where({['c.sensitive']:false}).orWhere('p.id', '=', id).select('p.*')
+}
+
+function getById(id){
+    return db('person').where({id:id[0]})
 }
