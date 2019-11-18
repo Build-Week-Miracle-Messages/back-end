@@ -2,15 +2,15 @@ const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const Users = require('../usersModel');
-const { validateUser } = require('../usersHelpers'); // the sole existence of this helper file is to check whether the user is logged in or not. It is a middleware that can check the for pass and user lengths
+const Users = require('../users/usersModel');
+const { validateUser } = require('../users/usersHelpers'); // the sole existence of this helper file is to check whether the user is logged in or not. It is a middleware that can check the for pass and user lengths
 
 router.post('/register', (req,res)=>{
 	let user = req.body // using let because it will be updated later
 	const validateResult = validateUser(user)
 	console.log(validateResult)
 	if (validateResult.isSuccessful === true){//checks to see if a valid username and password is being sent
-		const hash = bcrypt.hashSync(user.password, 10);
+		const hash = bcrypt.hashSync(user.password, 8);
 		user.password = hash;
 		Users.add(user)
 		.then(saved =>{
