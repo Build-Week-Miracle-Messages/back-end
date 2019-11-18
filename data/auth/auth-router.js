@@ -50,6 +50,10 @@ router.post('/login', (req,res)=>{
 	})
 })
 
+router.post('/logout', (req,res)=>{
+	
+})
+
 function getJwtToken(user){
 	const payload = {
 		sub: user.id,

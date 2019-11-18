@@ -1,7 +1,8 @@
 const router = require('express').Router()
 const caseDB = require('./caseModel')
+const restricted = require('../auth/restricted-middleware')
 
-router.post('/:id', (req,res)=>{
+router.post('/:id', restricted, (req,res)=>{
     const personObj= req.body
     const id = req.params.id
     let sensitive = personObj.sensitive

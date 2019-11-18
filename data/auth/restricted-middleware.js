@@ -1,12 +1,22 @@
-const brcrypt = require('bcryptjs')// imported to check the hashed password
 
+const jwt = require('jsonwebtoken')
 //const Users = require('model needs to imported here')
 
 module.exports = (req, res, next) =>{
-if(req.session && req.session.username){
-	next()//upon success, you will carry on
-}else{
-	res.status(401).json({you:"cannot pass"})//double check the status code
-}
+	const token = req.headers.authorization
+	if (token){
+		const secret = process.env.JWT_SECRET || "is it secret, is it safe"
+		
+		jwt.verify(token, secret, (err, decodedToken)=>{
+		  if(err){
+			  console.log(err)
+			res.status(401).json({message: "invalid credentials"})
+		  } else{
+			req.decodedJwt = decodedToken
+			next()
+		  }
+		})
+	  }else{
+	  res.status(401).json({ you: 'shall not pass!' });}
 }
 
