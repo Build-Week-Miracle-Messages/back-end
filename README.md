@@ -35,7 +35,7 @@ SEND:
 
 SUCCESS 200 OK
 
-RECEIVE
+RECEIVE:
 
 {
   "id": 7,
@@ -47,6 +47,107 @@ RECEIVE
 }
 
 
+CREATING A CASE --> /api/cases
+
+**Notes**
+
+A form with the following information will be needed create a case
+
+name: string, required
+age: integer, required
+home_town: string, required
+current_city: string, required
+contact: string, optional
+sensitve: Boolean, required
+
+**Important if a homeless person has a connect they must be sent in the same request in this syntax**
+
+connect_name: string, required
+connect_age: integer
+connect_relationship, required
+connect_location, required  
+
+SEND: 
+
+{
+"name":"bill",
+"age": 34,
+"home_town": "los angeles",
+"current_city": "Dallas",
+"contact": "uzias@gmail.com",
+"sensitive": false,
+"connect_name": "uzias",
+"connect_relationship": "brother",
+"connect_location": "peru"
+}
+
+SUCCESS 200 OK
+
+RECEIVE:
+
+[
+  {
+    "id": 7,
+    "name": "bill",
+    "age": 34,
+    "home_town": "los angeles",
+    "current_city": "Dallas",
+    "contact": "uzias@gmail.com"
+  }
+]
 
 
+GET USER CASES AND PUBLIC ==> /api/cases/all
+
+RECEIVE 200
+
+[
+  {
+    "id": 1,
+    "name": "Bill",
+    "age": 25,
+    "home_town": "los angeles",
+    "current_city": "san jose",
+    "contact": "1234567898"
+  },
+  ...
+ ]
+
+ 
+ GET USER CASES ==> /api/cases/current_city
+ 
+ RECEIVE 200
+ 
+ [
+  {
+    "id": 1,
+    "name": "Bill",
+    "age": 25,
+    "home_town": "los angeles",
+    "current_city": "san jose",
+    "contact": "1234567898"
+  },
+  ...
+  ]
+  
+  
+  DELETE CASE ==> /api/cases/:id 
+  
+  :id is the case id
+  
+  if the case does not belong to the user, the case will not be deleted. Once successful, an array of the users current cases will return
+  
+  SUCCESS RECEIVE 200:
+  
+  [
+  {
+    "id": 1,
+    "name": "Bill",
+    "age": 25,
+    "home_town": "los angeles",
+    "current_city": "san jose",
+    "contact": "1234567898"
+  },
+  ...
+  ]
 
