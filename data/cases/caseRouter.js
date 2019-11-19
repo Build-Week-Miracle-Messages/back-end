@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const caseDB = require('./caseModel')
+const connectDB = require('../connect/connectModel')
 const restricted = require('../auth/restricted-middleware')
 
 router.post('/:id', restricted, (req,res)=>{
@@ -14,7 +15,8 @@ router.post('/:id', restricted, (req,res)=>{
     caseDB.add(id, person)
     .then(person=>{
         caseDB.addCase({user_id:Number(id), person_id: Number(person[0]), sensitive: sensitive})
-        caseDB.addConnect({...connect, person_id: Number(person[0])})
+
+        connect?connectDB.addConnect({...connect, person_id: Number(person[0])}):console.log('no connect')
         caseDB.getById(person)
         .then(createdPerson=>{
             res.status(200).json(createdPerson)
@@ -30,7 +32,7 @@ router.post('/:id', restricted, (req,res)=>{
     })
 })
 
-router.delete('/:id',(req,res)=>{
+router.delete('/:id', restricted,(req,res)=>{
     const id = req.params.id 
 
     caseDB.remove(req.params.id)
@@ -40,7 +42,7 @@ router.delete('/:id',(req,res)=>{
     .catch(err=>{res.status(500).json({error: "something went wrong"})})
 })
 
-router.delete('/person/:id',(req,res)=>{
+router.delete('/person/:id', restricted,(req,res)=>{
     const id = req.params.id 
     caseDB.removePerson(req.params.id)
     .then(count => {
