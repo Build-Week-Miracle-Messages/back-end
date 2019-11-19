@@ -15,6 +15,7 @@ exports.up = function(knex) {
       tbl.string('home_town', 255).notNullable()
       tbl.string('current_city', 255).notNullable()
       tbl.string('contact', 126).notNullable()
+      
   })
   .createTable('cases', tbl=>{
       tbl.increments()
@@ -26,12 +27,12 @@ exports.up = function(knex) {
       .onUpdate('CASCADE')
       .onDelete('RESTRICT')
       tbl.integer('person_id')
-      .unsigned()
-      .notNullable()
       .references('id')
       .inTable('person')
       .onUpdate('CASCADE')
       .onDelete('CASCADE')
+      .unsigned()
+      .notNullable()
       tbl.boolean('sensitive').notNullable().default(false)
   })
   .createTable('connect', tbl=>{
@@ -42,7 +43,7 @@ exports.up = function(knex) {
       .references('id')
       .inTable('person')
       .onUpdate('CASCADE')
-      .onDelete('RESTRICT')
+      .onDelete('CASCADE')
       tbl.string('name', 126).notNullable()
       tbl.integer('age')
       tbl.string('relationship', 126).notNullable()

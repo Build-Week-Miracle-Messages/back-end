@@ -50,9 +50,23 @@ router.post('/login', (req,res)=>{
 	})
 })
 
-router.post('/logout', (req,res)=>{
-	
-})
+router.get('/logout', (req,res)=>{
+	if (req.session){
+	  req.session.destroy(error=>{
+		if(error){
+		  res
+		  .status(500)
+		  .json({
+			message:"you can check out any time you like, but you can never leave..."
+		  })
+		} else{
+		  res.status(200).json({message: "logged out successfully"})
+		}
+	  });
+	}else{
+	  res.status(500).json({message:"req.session was false"})
+	}
+  })
 
 function getJwtToken(user){
 	const payload = {

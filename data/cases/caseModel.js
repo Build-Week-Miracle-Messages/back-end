@@ -1,18 +1,17 @@
 const db = require('../dbConfig')
 
 module.exports = {
-    get,
+    getEveryone,
     addCase,
     addConnect,
     add,
     remove,
     removePerson,
-    getById
+    getById,
+    getByID,
+    getUsersPerson,
+    updatePerson
 }
-
-// function get(){
-//     return db('cases')
-// }
 
 function addCase(obj){
     // should only be accessed through add case
@@ -24,7 +23,7 @@ function addConnect(obj){
     return  db('connect').insert(obj)
 }
 
-function add(id, personObj){
+function add(personObj){
     return db('person').insert(personObj)//adds person
    
 }
@@ -37,11 +36,32 @@ function removePerson(id){
     return db('person').where({id}).del()
 }
 
-function get(id){
+function getEveryone(id){
     //should show the list of people who's information is not private
-    return db('person as p').join('cases as c', 'p.id', 'c.person_id').where({['c.sensitive']:false}).orWhere('p.id', '=', id).select('p.*')
+    return db('person as p')
+    .join('cases as c', 'p.id', 'c.person_id')
+    .where({'c.sensitive':0})
+    .orWhere('p.id', '=', id).select('p.*')//.orderBy('c.sensitive')
 }
 
 function getById(id){
     return db('person').where({id:id[0]})
+}
+
+function getByID(id){
+    return db('cases').where({id})// selects the first one
+}
+
+function getUsersPerson(id){
+    //id is the users id
+    return db('person as p')
+    .join('cases as c', 'p.id', 'c.person_id')
+    .join('users as u', 'u.id','c.user_id' )
+    .where('u.id', '=', id)
+    .select('p.*')
+}
+
+function updatePerson(id, body){
+    console.log({id}, body)
+    return db('person').update(body).where({id})
 }
