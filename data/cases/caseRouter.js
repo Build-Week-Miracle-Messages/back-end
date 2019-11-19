@@ -42,11 +42,13 @@ router.post('/', restricted, (req,res)=>{
         }
         return caseDB.addCase({user_id:Number(id), person_id: Number(person[0]), sensitive: sensitive})
         .then(_=>{
-            return caseDB.getById(person)
+            return caseDB.getById(person,hasConnect)
                 .then(createdPerson=>{
+                    console.log('hello', createdPerson, {'p.id':person[0]})
                     res.status(200).json(createdPerson)
                 })
                 .catch(err=>{
+                    console.log(err)
                     res.status(404).json({message:"something went wrong"})
                 })
             })

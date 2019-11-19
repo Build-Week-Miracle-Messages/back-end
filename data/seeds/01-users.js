@@ -11,3 +11,7 @@ exports.seed = function(knex) {
       ]);
     });
 };
+
+//username:'uziasr', password '123'
+// username:'chrisb', password: '123'
+// username:'mashimab', password: '123'

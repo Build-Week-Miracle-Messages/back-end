@@ -44,9 +44,17 @@ function getEveryone(id){
     .orWhere('p.id', '=', id).select('p.*')//.orderBy('c.sensitive')
 }
 
-function getById(id){
-    return db('person').where({id:id[0]})
+function getById(id, hasConnect){
+    if (hasConnect){
+    return db('person as p')
+    .left('connect as c', 'p.id', 'c.person_id')
+    .where({'p.id':id[0]})
+    .select('p.*', 'c.name as connect_name', 'c.age as connect_age','c.relationship as connect_relationship', 'c.location as connect_location')
+} else {
+    return db('person as p').where({'id':id[0]}).select('*')
 }
+}
+
 
 function getByID(id){
     return db('cases').where({id})// selects the first one
