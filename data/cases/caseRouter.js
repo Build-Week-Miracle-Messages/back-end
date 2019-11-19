@@ -9,7 +9,6 @@ router.get('/all', restricted, (req,res)=>{
 
     caseDB.getEveryone(req.decodedJwt.sub)
     .then(everyone=>{
-        // console.log(everyone)
         res.status(200).json(everyone)
     })
     .catch(err=>{
