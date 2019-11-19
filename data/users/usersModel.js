@@ -3,12 +3,12 @@ const db = require('../dbConfig')
 module.exports = {
     find,
     findBy,
-    findBy,
+    findById,
     add
 }
 
 function find(){
-    return db("users").select("id", "username");
+    return db("users").select("id", "username", "email", "name", "password");
 }
 
 function findBy(filter){

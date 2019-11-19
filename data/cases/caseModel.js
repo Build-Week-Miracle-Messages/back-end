@@ -16,7 +16,7 @@ module.exports = {
 
 function addCase(obj){
     // should only be accessed through add case
-    return db('cases').insert({...obj, id:4})
+    return db('cases').insert({...obj}).returning('id')
 }
 
 function addConnect(obj){

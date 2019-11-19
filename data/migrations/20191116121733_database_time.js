@@ -31,7 +31,7 @@ exports.up = function(knex) {
       .references('id')
       .inTable('person')
       .onUpdate('CASCADE')
-      .onDelete('RESTRICT')
+      .onDelete('CASCADE')
       tbl.boolean('sensitive').notNullable().default(false)
   })
   .createTable('connect', tbl=>{

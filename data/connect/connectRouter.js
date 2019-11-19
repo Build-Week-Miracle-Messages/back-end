@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const connectDB = require('./connectModel')
+const connectDB = require('./connectModel') 
 const restricted = require('../auth/restricted-middleware')
 
 router.post('/:id', restricted, (req,res)=>{
