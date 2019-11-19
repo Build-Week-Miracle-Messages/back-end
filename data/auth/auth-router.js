@@ -14,7 +14,10 @@ router.post('/register', (req,res)=>{
 		user.password = hash;
 		Users.add(user)
 		.then(saved =>{
-			res.status(201).json(saved)
+			const token = getJwtToken(user);
+			res.status(200).json({
+				...user, token:token 
+			});
 		})
 		.catch(err=>{
 			res.status(500).json(err)
