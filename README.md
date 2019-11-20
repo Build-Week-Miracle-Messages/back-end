@@ -85,16 +85,24 @@ SUCCESS 200 OK
 
 RECEIVE:
 
-[
-  {
-    "id": 7,
-    "name": "bill",
-    "age": 34,
-    "home_town": "los angeles",
-    "current_city": "Dallas",
-    "contact": "uzias@gmail.com"
-  }
-]
+{
+  "id": 14,
+  "name": "bill",
+  "age": 34,
+  "home_town": "los angeles",
+  "current_city": "Dallas",
+  "contact": "uzias@gmail.com",
+  "connect": [
+    {
+      "id": 14,
+      "person_id": 14,
+      "name": "uzias",
+      "age": null,
+      "relationship": "brother",
+      "location": "peru"
+    }
+  ]
+}
 
 
 GET USER CASES AND PUBLIC ==> /api/cases/all
@@ -114,7 +122,7 @@ RECEIVE 200
  ]
 
  
- GET USER CASES ==> /api/cases/current_city
+ GET USER CASES ==> /api/cases/current
  
  RECEIVE 200
  
@@ -130,8 +138,31 @@ RECEIVE 200
   ...
   ]
   
+  GET PERSON AND CONNECT BY PERSON ID ==> /api/cases/:id
   
-  DELETE CASE ==> /api/cases/:id 
+  RECEIVE 200
+  
+  {
+  "id": 2,
+  "name": "Jose",
+  "age": 35,
+  "home_town": "dallas",
+  "current_city": "memphis",
+  "contact": "jose@gmail.com",
+  "connect": [
+    {
+      "id": 2,
+      "person_id": 2,
+      "name": "Ernie",
+      "age": null,
+      "relationship": "friend",
+      "location": null
+    }
+  ]
+}
+  
+  
+DELETE CASE ==> /api/cases/:id 
   
   :id is the case id
   
@@ -150,4 +181,75 @@ RECEIVE 200
   },
   ...
   ]
+  
+  
+PUT PERSON ==> /api/cases/person/:id
 
+:id is the person id
+
+If the user has the person for case, the person can be updated
+
+"name": 
+"age":
+"home_town":
+"current_city":
+"contact":
+
+SEND IN ANY OF THE FOLLOWING CHANGED FOR PUT TO WORK
+
+SEND:
+
+{"age":"100", "name":"Jules"}
+
+RECEIVE 201 
+
+[
+  {
+    "id": 1,
+    "name": "Jules",
+    "age": 100,
+    "home_town": "los angeles",
+    "current_city": "san jose",
+    "contact": "1234567898"
+  }
+]
+
+
+POST MISSING- no login needed ==> /api/missing
+
+all fields required
+
+SEND:
+{
+"name":"peter",
+"age":23,
+"home_town":"anaheim", 
+"contact":"1232312314"
+}
+
+RECEIVE 201
+
+[
+  {
+    "id": 8,
+    "name": "peter",
+    "age": 23,
+    "home_town": "anaheim",
+    "contact": "1232312314"
+  }
+]
+
+GET ALL MISSING - no login needed ==> /api/missing
+
+RECEIVE 200
+
+[
+  {
+    "id": 1,
+    "name": "peter",
+    "age": 23,
+    "home_town": "anaheim",
+    "contact": "1232312314"
+  },
+  ...
+]

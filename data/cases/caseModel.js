@@ -8,24 +8,23 @@ module.exports = {
     remove,
     removePerson,
     getById,
-    getByID,
+    getCaseByID,
     getUsersPerson,
-    updatePerson
+    updatePerson,
+    getPersonById,
+    getConnectById
 }
 
-function addCase(obj){
-    // should only be accessed through add case
-    return db('cases').insert({...obj}).returning('id')
+function getPersonById(id){
+    return db('person').where({id}).first()
 }
 
-function addConnect(obj){
-    //should only be accessed through add case 
-    return  db('connect').insert(obj)
-}
-
-function add(personObj){
-    return db('person').insert(personObj)//adds person
-   
+function getConnectById(id){
+    console.log(id)
+    return db('connect as c')
+    .join('person as p', 'c.person_id', 'p.id')
+    .where('c.person_id','=', id)
+    .select('c.*')
 }
 
 function remove(id){
@@ -49,14 +48,13 @@ function getById(id, hasConnect){
     return db('person as p')
     .join('connect as c', 'p.id', 'c.person_id')
     .where({'p.id':id[0]})
-    .select('p.*', 'c.name as connect_name', 'c.age as connect_age','c.relationship as connect_relationship', 'c.location as connect_location')
+    .select('p.*', 'c.name as connect_name', 'c.id as connect_id','c.age as connect_age','c.relationship as connect_relationship', 'c.location as connect_location')
 } else {
     return db('person as p').where({'id':id[0]}).select('*')
-}
+    }
 }
 
-
-function getByID(id){
+function getCaseByID(id){
     return db('cases').where({id})// selects the first one
 }
 
@@ -67,6 +65,21 @@ function getUsersPerson(id){
     .join('users as u', 'u.id','c.user_id' )
     .where('u.id', '=', id)
     .select('p.*')
+}
+
+function addCase(obj){
+    // should only be accessed through add case
+    return db('cases').insert({...obj}).returning('id')
+}
+
+function addConnect(obj){
+    //should only be accessed through add case 
+    return  db('connect').insert(obj)
+}
+
+function add(personObj){
+    return db('person').insert(personObj)//adds person
+    
 }
 
 function updatePerson(id, body){

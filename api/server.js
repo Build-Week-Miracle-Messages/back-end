@@ -8,6 +8,7 @@ const authRouter = require('../data/auth/auth-router')
 const casesRouter = require('../data/cases/caseRouter')
 const personRouter = require('../data/person/personRouter')
 const userRouter = require('../data/users/usersRouter')
+const missingRouter = require('../data/missing/missingRouter')
 
 
 server.use(express.json())
@@ -18,6 +19,7 @@ server.use('/api/auth', authRouter)
 server.use('/api/cases', casesRouter)
 server.use('/api/person', personRouter)
 server.use('/api/users', userRouter)
+server.use('/api/missing', missingRouter)
 
 // server.use('/api/auth', userRouter)
 
