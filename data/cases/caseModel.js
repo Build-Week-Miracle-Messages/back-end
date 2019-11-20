@@ -10,7 +10,9 @@ module.exports = {
     getById,
     getByID,
     getUsersPerson,
-    updatePerson
+    updatePerson,
+    getPersonById,
+    getConnectById
 }
 
 function addCase(obj){
@@ -25,8 +27,21 @@ function addConnect(obj){
 
 function add(personObj){
     return db('person').insert(personObj)//adds person
-   
+    
 }
+
+function getPersonById(id){
+    return db('person').where({id}).first()
+}
+
+function getConnectById(id){
+    console.log(id)
+    return db('connect as c')
+    .join('person as p', 'c.person_id', 'p.id')
+    .where('c.person_id','=', id)
+    .select('c.*')
+}
+
 
 function remove(id){
     return db('cases').where({id}).del()

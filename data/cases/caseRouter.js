@@ -9,13 +9,50 @@ router.get('/all', restricted, (req,res)=>{
 
     caseDB.getEveryone(req.decodedJwt.sub)
     .then(everyone=>{
-        res.status(200).json(everyone)
+        res.status(200).json({...everyone})
     })
     .catch(err=>{
         console.log(err)
         res.status(500).json(err)
     })
 })
+
+router.get('/current', restricted, (req,res)=>{
+    caseDB.getUsersPerson(req.decodedJwt.sub)
+    .then(people=>{
+        // console.log(people)
+        res.status(200).json(people)
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(400).json(err)
+    })
+})
+
+router.get('/:id', restricted, (req,res)=>{
+    const id = req.params.id
+    caseDB.getPersonById(id)
+    .then(person=>{
+        return caseDB.getConnectById(person.id)
+        .then(connect=>{
+            console.log('these are connects', connect)
+            res.status(200).json({...person, connect:[...connect]})
+        })
+        .catch(err=>{
+            console.log(err)
+            res.status(400).json(err)
+
+        })
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+//
+//
+
+
 
 router.post('/', restricted, (req,res)=>{
 
@@ -33,7 +70,6 @@ router.post('/', restricted, (req,res)=>{
         if(hasConnect){
             connectDB.addConnect({...connect, person_id: Number(person[0])})
             .then(success=>{
-                console.log(success)
             })
             .catch(err=>{
                 console.log(err)
@@ -43,7 +79,6 @@ router.post('/', restricted, (req,res)=>{
         .then(_=>{
             return caseDB.getById(person,hasConnect)
                 .then(createdPerson=>{
-                    console.log('hello', createdPerson, {'p.id':person[0]})
                     res.status(200).json(createdPerson)
                 })
                 .catch(err=>{
@@ -85,18 +120,6 @@ router.delete('/:id', restricted, validateUserCase,(req,res)=>{
                 res.status(500).json({error: "something went wrong"})})
             })
     })
-
-router.get('/current', restricted, (req,res)=>{
-    caseDB.getUsersPerson(req.decodedJwt.sub)
-    .then(people=>{
-        // console.log(people)
-        res.status(200).json(people)
-    })
-    .catch(err=>{
-        console.log(err)
-        res.status(400).json(err)
-    })
-})
 
 
 router.delete('/person/:id', restricted, validateUserCase,(req,res)=>{
