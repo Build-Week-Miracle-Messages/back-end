@@ -8,7 +8,7 @@ module.exports = {
     remove,
     removePerson,
     getById,
-    getByID,
+    getCaseByID,
     getUsersPerson,
     updatePerson,
     getPersonById,
@@ -64,14 +64,14 @@ function getById(id, hasConnect){
     return db('person as p')
     .join('connect as c', 'p.id', 'c.person_id')
     .where({'p.id':id[0]})
-    .select('p.*', 'c.name as connect_name', 'c.age as connect_age','c.relationship as connect_relationship', 'c.location as connect_location')
+    .select('p.*', 'c.name as connect_name', 'c.id as connect_id','c.age as connect_age','c.relationship as connect_relationship', 'c.location as connect_location')
 } else {
     return db('person as p').where({'id':id[0]}).select('*')
 }
 }
 
 
-function getByID(id){
+function getCaseByID(id){
     return db('cases').where({id})// selects the first one
 }
 

@@ -9,7 +9,7 @@ router.get('/all', restricted, (req,res)=>{
 
     caseDB.getEveryone(req.decodedJwt.sub)
     .then(everyone=>{
-        res.status(200).json({...everyone})
+        res.status(200).json(everyone)
     })
     .catch(err=>{
         console.log(err)
@@ -49,9 +49,6 @@ router.get('/:id', restricted, (req,res)=>{
         res.status(500).json(err)
     })
 })
-//
-//
-
 
 
 router.post('/', restricted, (req,res)=>{
@@ -77,14 +74,19 @@ router.post('/', restricted, (req,res)=>{
         }
         return caseDB.addCase({user_id:Number(id), person_id: Number(person[0]), sensitive: sensitive})
         .then(_=>{
-            return caseDB.getById(person,hasConnect)
-                .then(createdPerson=>{
-                    res.status(200).json(createdPerson)
+            caseDB.getPersonById(person[0])
+            .then(newPerson=>{
+                return caseDB.getConnectById(newPerson.id)
+                .then(connect=>{
+                    console.log('these are connects', connect)
+                    res.status(200).json({...newPerson, connect:[...connect]})
                 })
                 .catch(err=>{
                     console.log(err)
-                    res.status(404).json({message:"something went wrong"})
+                    res.status(400).json(err)
+        
                 })
+            })
             })
         .catch(err=>{
             console.log(err)
@@ -102,7 +104,7 @@ router.delete('/:id', restricted, validateUserCase,(req,res)=>{
     //where id is for case
     const user_id = (req.decodedJwt.sub)
     const id = req.params.id
-    caseDB.getByID(id)
+    caseDB.getCaseByID(id)
         .then(thisCase=>{
         caseDB.removePerson(thisCase[0].person_id)
             .then(count => {
@@ -156,7 +158,7 @@ router.put('/person/:id', restricted, validateUserCase,(req,res)=>{
 
 
 function  validateUserCase(req,res,next){
-    caseDB.getByID(req.params.id)
+    caseDB.getCaseByID(req.params.id)
     .then(thisCase=>{
         (thisCase.length===0)?res.status(404).json({error:"this case does not exist"}):(thisCase[0].user_id === req.decodedJwt.sub)? next():res.status(400).json({error:"This is not your case!"})
     })
