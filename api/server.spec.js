@@ -127,4 +127,45 @@ describe('server person', ()=>{
             })
         })
     })
+    describe('PUT /api/cases/person/:id',()=>{
+        it('should return an object', async ()=>{
+            return request(server)
+            .get('/api/cases/current/1')
+            .then(res=>{
+                console.log(res.type)
+                expect(res.body).toBeInstanceOf(Object)
+            })
+        })
+    })
+    describe('PUT /api/cases/person/:id',()=>{
+        it('should return a truthy value', async ()=>{
+            return request(server)
+            .get('/api/cases/current/1')
+            .then(res=>{
+                console.log(res.type)
+                expect(res.type).toBeTruthy()
+            })
+        })
+    })
+    ///api/cases/5
+    describe('DELETE /api/cases/:id',()=>{
+        it('should return an json', async ()=>{
+            return request(server)
+            .get('/api/cases/current/1')
+            .then(res=>{
+                console.log(res.type)
+                expect(res.type).toBeTruthy()
+            })
+        })
+    })
+    describe('DELETE /api/cases/:id',()=>{
+        it('should return an json', async ()=>{
+            return request(server)
+            .get('/api/cases/current/2')
+            .then(res=>{
+                console.log(res.type)
+                expect(res.type).toBeTruthy()
+            })
+        })
+    })
 })
