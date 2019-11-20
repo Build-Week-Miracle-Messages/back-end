@@ -47,7 +47,7 @@ function getEveryone(id){
 function getById(id, hasConnect){
     if (hasConnect){
     return db('person as p')
-    .left('connect as c', 'p.id', 'c.person_id')
+    .join('connect as c', 'p.id', 'c.person_id')
     .where({'p.id':id[0]})
     .select('p.*', 'c.name as connect_name', 'c.age as connect_age','c.relationship as connect_relationship', 'c.location as connect_location')
 } else {
