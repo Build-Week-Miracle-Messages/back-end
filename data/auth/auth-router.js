@@ -13,11 +13,14 @@ router.post('/register', (req,res)=>{
 		const hash = bcrypt.hashSync(user.password, 8);
 		user.password = hash;
 		Users.add(user)
-		.then(saved =>{
-			const token = getJwtToken(user);
+		.then(id =>{
+			return Users.findById(id)
+			.then(createdUser=>{
+			const token = getJwtToken(createdUser);
 			res.status(200).json({
-				...user, token:token 
+				...createdUser, token:token 
 			});
+			})
 		})
 		.catch(err=>{
 			
