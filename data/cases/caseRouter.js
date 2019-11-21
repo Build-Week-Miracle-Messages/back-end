@@ -87,8 +87,11 @@ router.post('/', restricted, (req,res)=>{
                 .catch(err=>{
                     console.log(err)
                     res.status(400).json(err)
-        
                 })
+            .catch(err=>{
+                console.log(err)
+                res.status(400).json({err, message:'@ line 93 case was not added?'})
+            })
             })
             })
         .catch(err=>{
