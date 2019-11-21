@@ -63,9 +63,10 @@ router.post('/', restricted, (req,res)=>{
     const hasConnect = (Object.keys(connect).length>0)
 
     caseDB.add(person)
-    .then(person=>{
+    .then(newPerson=>{
         if(hasConnect){
-            connectDB.addConnect({...connect, person_id: Number(person[0])})
+            console.log('this is a person', person, 'this is a new person', newPerson)
+            connectDB.addConnect({...connect, person_id: Number(newPerson[0])})
             .then(success=>{
             })
             .catch(err=>{
@@ -73,8 +74,8 @@ router.post('/', restricted, (req,res)=>{
             })
         }
         
-        console.log('line 76',{user_id:Number(id), person_id: Number(person[0]), sensitive: sensitive})
-        return caseDB.addCase({user_id:Number(id), person_id: Number(person[0]), sensitive: sensitive})
+        console.log('line 76',{user_id:Number(id), person_id: Number(newPerson[0]), sensitive: sensitive})
+        return caseDB.addCase({user_id:Number(id), person_id: Number(newPerson[0]), sensitive: sensitive})
         .then(_=>{
             caseDB.getPersonById(person[0])
             .then(newPerson=>{
