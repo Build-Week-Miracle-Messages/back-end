@@ -133,7 +133,7 @@ router.delete('/:id', restricted, validateUserCase,(req,res)=>{
     })
 
 
-router.delete('/person/:id', restricted, (req,res)=>{
+router.delete('/person/:id', restricted, validateUserCase,(req,res)=>{
     const id = req.params.id 
     caseDB.removePerson(req.params.id)
     .then(count => {
@@ -143,7 +143,7 @@ router.delete('/person/:id', restricted, (req,res)=>{
     .catch(err=>{res.status(500).json({error: "something went wrong"})})
 })
 
-router.put('/person/:id', restricted,(req,res)=>{
+router.put('/person/:id', restricted, validateUserCase,(req,res)=>{
     const person_id = req.params.id
     caseDB.updatePerson(person_id, req.body)
     .then(updated=>{

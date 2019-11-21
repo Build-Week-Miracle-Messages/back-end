@@ -54,7 +54,7 @@ function getById(id, hasConnect){
 }
 
 function getCaseByID(id){
-    return db('cases').where({id})// selects the first one
+    return db('cases').where({id}).returning('id')// selects the first one
 }
 
 function getUsersPerson(id){
