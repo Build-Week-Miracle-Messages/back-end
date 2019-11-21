@@ -59,12 +59,13 @@ function getCaseByID(id){
 
 function getUsersPerson(id){
     //id is the users id
+    console.log(id)
     return db('person as p')
     .join('cases as c', 'p.id', 'c.person_id')
     .join('users as u', 'u.id','c.user_id' )
     .where('u.id', '=', id)
     // .select('p.*')
-    .returning('p.*')
+    .returning('*')
 }
 
 function addCase(obj){
