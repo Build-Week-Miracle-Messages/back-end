@@ -85,7 +85,7 @@ router.post('/', restricted, (req,res)=>{
                 return caseDB.getConnectById(newPerson[0].id)
                 .then(connect=>{
                     console.log('these are connects', connect)
-                    res.status(200).json({...newPerson, connect:[...connect]})
+                    res.status(200).json({...newPerson[0], connect:[...connect]})
                 })
                 .catch(err=>{
                     console.log(err)
@@ -137,13 +137,13 @@ router.delete('/person/:id', restricted, validateUserCase,(req,res)=>{
     const id = req.params.id 
     caseDB.removePerson(req.params.id)
     .then(count => {
-        console.log(count)
+        console.log('140',count)
     count?res.status(200).json({message:"success!"}):res.status(401).json({message:"that id does not exist, nothing was deleted"})
     })
     .catch(err=>{res.status(500).json({error: "something went wrong"})})
 })
 
-router.put('/person/:id', restricted, validateUserCase,(req,res)=>{
+router.put('/person/:id', restricted,(req,res)=>{
     const person_id = req.params.id
     caseDB.updatePerson(person_id, req.body)
     .then(updated=>{

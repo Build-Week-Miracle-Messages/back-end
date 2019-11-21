@@ -85,5 +85,5 @@ function add(personObj){
 
 function updatePerson(id, body){
 
-    return db('person').update(body).where({id})
+    return db('person').update(body).where({id}).returning('*')
 }
