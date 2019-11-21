@@ -20,7 +20,6 @@ function getPersonById(id){
 }
 
 function getConnectById(id){
-    console.log(id)
     return db('connect as c')
     .join('person as p', 'c.person_id', 'p.id')
     .where('c.person_id','=', id)
@@ -83,6 +82,6 @@ function add(personObj){
 }
 
 function updatePerson(id, body){
-    console.log({id}, body)
+
     return db('person').update(body).where({id})
 }

@@ -7,8 +7,8 @@ const { validateUser } = require('../users/usersHelpers'); // the sole existence
 
 router.post('/register', (req,res)=>{
 	let user = req.body // using let because it will be updated later
+	console.log(req.body)
 	const validateResult = validateUser(user)
-	console.log(validateResult)
 	if (validateResult.isSuccessful === true){//checks to see if a valid username and password is being sent
 		const hash = bcrypt.hashSync(user.password, 8);
 		user.password = hash;
@@ -20,7 +20,8 @@ router.post('/register', (req,res)=>{
 			});
 		})
 		.catch(err=>{
-			res.status(500).json(err)
+			
+			res.status(500).json({"fix it here!!":err})
 		})
 	}else{
 		res.status(400).json({
@@ -33,7 +34,6 @@ router.post('/register', (req,res)=>{
 
 router.post('/login', (req,res)=>{
 	let {username, password } = req.body
-	console.log(username, password)
 
 	Users.findBy({username})
 	.first()//should be unique
@@ -78,7 +78,6 @@ function getJwtToken(user){
 		username: user.username,
 		iat: Date.now()
 	}
-	console.log('payload')
 	  const secret = process.env.JWT_SECRET || 'is it secret, is it safe'//leaving here for now
 	  const options = {
 		expiresIn: '1d', // show other available options in the library's documentation
