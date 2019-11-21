@@ -66,7 +66,7 @@ router.post('/', restricted, (req,res)=>{
     .then(newPerson=>{
         if(hasConnect){
             console.log('this is a person', person, 'this is a new person', newPerson)
-            connectDB.addConnect({...connect, person_id: Number(newPerson[0])})
+            connectDB.addConnect({...connect, person_id: Number(newPerson[0].id)})
             .then(success=>{
             })
             .catch(err=>{
