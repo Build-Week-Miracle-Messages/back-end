@@ -18,9 +18,10 @@ router.get('/all', restricted, (req,res)=>{
 })
 
 router.get('/current', restricted, (req,res)=>{
+    console.log('line 21 ',req.decodedJwt.sub)
     caseDB.getUsersPerson(req.decodedJwt.sub)
     .then(people=>{
-        // console.log(people)
+        console.log('line 24 ',people)
         res.status(200).json(people)
     })
     .catch(err=>{
