@@ -8,11 +8,13 @@ module.exports = {
 }
 
 function addMissing(obj){
+    console.log(obj)
     return db('missing').insert(obj).select('*').returning('*')
     // .then(() => module.exports.getMissingById(obj.id))
 }
 
 function deleteMissing(id){
+    console.log(id)
     return db('missing').where({id}).del()
 }
 

@@ -147,7 +147,7 @@ router.put('/person/:id', restricted, validateUserCase,(req,res)=>{
     caseDB.updatePerson(person_id, req.body)
     .then(updated=>{
         if(updated){
-           return caseDB.getById(person_id)
+           return caseDB.getPersonById(person_id)
             .then(updatedPerson=>{
                 res.status(201).json(updatedPerson)
             })

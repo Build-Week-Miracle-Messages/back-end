@@ -16,7 +16,7 @@ module.exports = {
 }
 
 function getPersonById(id){
-    return db('person').where({id}).first()
+    return db('person').where({id}).first().returning('*')
 }
 
 function getConnectById(id){
