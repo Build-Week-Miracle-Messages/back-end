@@ -170,7 +170,6 @@ router.put('/person/:id', restricted, validateUserCase,(req,res)=>{
 function  validateUserCase(req,res,next){
     caseDB.getCaseByID(req.params.id)
     .then(thisCase=>{
-        console.log(thisCase)
         (thisCase.length===0)?res.status(404).json({error:"this case does not exist",thisCase:thisCase}):(thisCase[0].user_id === req.decodedJwt.sub)? next():res.status(400).json({error:"This is not your case!"})
     })
 }
