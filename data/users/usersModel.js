@@ -20,10 +20,11 @@ function add(user) {
     // const [id] = await db("users").insert(user);
     // console.log(id)
     // return findById(id);
-    return db("users").insert(user)
+    return db("users").insert(user).returning('id')
 }
 
 function findById(id) {
+    console.log('is this called')
 return db("users")
     .where({ id })
     .first()
