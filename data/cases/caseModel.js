@@ -73,11 +73,11 @@ function addCase(obj){
 
 function addConnect(obj){
     //should only be accessed through add case 
-    return  db('connect').insert(obj)
+    return  db('connect').insert(obj).returning('*')
 }
 
 function add(personObj){
-    return db('person').insert(personObj)//adds person
+    return db('person').insert(personObj).returning('*')//adds person
     
 }
 
