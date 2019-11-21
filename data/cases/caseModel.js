@@ -63,7 +63,7 @@ function getUsersPerson(id){
     .join('cases as c', 'p.id', 'c.person_id')
     .join('users as u', 'u.id','c.user_id' )
     .where('u.id', '=', id)
-    .select('p.*').returning('p*')
+    .select('p.*').returning('p.*')
 }
 
 function addCase(obj){
