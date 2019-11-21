@@ -54,6 +54,7 @@ function getById(id, hasConnect){
 }
 
 function getCaseByID(id){
+    console.log(id)
     return db('cases').where({id}).returning('id')// selects the first one
 }
 
