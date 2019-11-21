@@ -137,6 +137,7 @@ router.delete('/person/:id', restricted, validateUserCase,(req,res)=>{
     const id = req.params.id 
     caseDB.removePerson(req.params.id)
     .then(count => {
+        console.log(count)
     count?res.status(200).json({message:"success!"}):res.status(401).json({message:"that id does not exist, nothing was deleted"})
     })
     .catch(err=>{res.status(500).json({error: "something went wrong"})})
@@ -147,7 +148,7 @@ router.put('/person/:id', restricted, validateUserCase,(req,res)=>{
     caseDB.updatePerson(person_id, req.body)
     .then(updated=>{
         if(updated){
-           return caseDB.getPersonById(person_id)
+           return caseDB.getPersonById  (person_id)
             .then(updatedPerson=>{
                 res.status(201).json(updatedPerson)
             })
