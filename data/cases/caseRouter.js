@@ -78,7 +78,7 @@ router.post('/', restricted, (req,res)=>{
         return caseDB.addCase({user_id:Number(id), person_id: Number(newPerson[0].id), sensitive: sensitive})
         .then(_=>{
             console.log(_)
-            caseDB.getPersonById('newPerson',newPerson[0].id)
+            caseDB.getPersonById(newPerson[0].id)
             .then(currentPerson=>{
                 console.log('currentPerson line 83', currentPerson)
                 return caseDB.getConnectById(newPerson[0].id)
