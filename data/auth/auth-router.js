@@ -9,6 +9,7 @@ router.post('/register', (req,res)=>{
 	let user = req.body // using let because it will be updated later
 	console.log(req.body)
 	const validateResult = validateUser(user)
+	console.log(validateResult)
 	if (validateResult.isSuccessful === true){//checks to see if a valid username and password is being sent
 		const hash = bcrypt.hashSync(user.password, 8);
 		user.password = hash;
