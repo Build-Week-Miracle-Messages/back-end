@@ -18,14 +18,14 @@ router.get('/all', restricted, (req,res)=>{
 })
 
 router.get('/current', restricted, (req,res)=>{
-    caseDB.getUsersPerson(req.decodedJwt.sub)
-    .then(people=>{
-        // console.log(people)
-        res.status(200).json(people)
+    caseDB.getUsersPersonConnects(req.decodedJwt.sub)
+    .then(peopleConnect=>{
+        res.status(200).json(peopleConnect)
     })
     .catch(err=>{
         console.log(err)
-        res.status(400).json(err)
+        res.status(500).json({err:'somehting went wrong'})
+
     })
 })
 
@@ -35,7 +35,6 @@ router.get('/:id', restricted, (req,res)=>{
     .then(person=>{
         return caseDB.getConnectById(person.id)
         .then(connect=>{
-            console.log('these are connects', connect)
             res.status(200).json({...person, connect:[...connect]})
         })
         .catch(err=>{
@@ -78,7 +77,6 @@ router.post('/', restricted, (req,res)=>{
             .then(newPerson=>{
                 return caseDB.getConnectById(newPerson.id)
                 .then(connect=>{
-                    console.log('these are connects', connect)
                     res.status(200).json({...newPerson, connect:[...connect]})
                 })
                 .catch(err=>{

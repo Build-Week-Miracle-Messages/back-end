@@ -12,7 +12,8 @@ module.exports = {
     getUsersPerson,
     updatePerson,
     getPersonById,
-    getConnectById
+    getConnectById,
+    getUsersPersonConnects
 }
 
 function getPersonById(id){
@@ -20,7 +21,7 @@ function getPersonById(id){
 }
 
 function getConnectById(id){
-    console.log(id)
+    // console.log(id)
     return db('connect as c')
     .join('person as p', 'c.person_id', 'p.id')
     .where('c.person_id','=', id)
@@ -67,6 +68,20 @@ function getUsersPerson(id){
     .select('p.*')
 }
 
+function getUsersPersonConnects(id){
+    return db('person as p')
+    .join('cases as c', 'p.id', 'c.person_id')
+    .join('users as u', 'u.id','c.user_id' )
+    .join('connect as con', 'con.person_id', 'p.id' )
+    .where('u.id', '=', id)
+    .select('p.*',"con.id as connect_id",
+    "con.person_id as connect_id",
+    "con.name as connect_name",
+    "con.age as connect_age",
+    "con.relationship as connect_relationship",
+    "con.location as connect_location")
+}
+
 function addCase(obj){
     // should only be accessed through add case
     return db('cases').insert({...obj}).returning('id')
@@ -83,6 +98,6 @@ function add(personObj){
 }
 
 function updatePerson(id, body){
-    console.log({id}, body)
+    // console.log({id}, body)
     return db('person').update(body).where({id})
 }
