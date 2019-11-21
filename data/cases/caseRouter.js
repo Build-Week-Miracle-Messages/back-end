@@ -133,7 +133,7 @@ router.delete('/:id', restricted, validateUserCase,(req,res)=>{
     })
 
 
-router.delete('/person/:id', restricted, validateUserCase,(req,res)=>{
+router.delete('/person/:id', restricted, (req,res)=>{
     const id = req.params.id 
     caseDB.removePerson(req.params.id)
     .then(count => {
