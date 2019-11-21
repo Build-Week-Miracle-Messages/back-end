@@ -15,8 +15,8 @@ router.post('/register', (req,res)=>{
 		user.password = hash;
 		Users.add(user)
 		.then(id =>{
-			console.log(id)
-			return Users.findById(id)
+			console.log('id', id)
+			return Users.findById(id[0])
 			.then(createdUser=>{
 			const token = getJwtToken(createdUser);
 			res.status(200).json({
