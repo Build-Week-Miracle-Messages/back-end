@@ -7,7 +7,6 @@ router.post('/:id', restricted, (req,res)=>{
     const connect = req.body
     connectDB.addConnect({...connect, person_id})
     .then(conn=>{
-        console.log(conn)
         res.status(200).json(conn)
     })
     .catch(err=>{
@@ -20,7 +19,6 @@ router.get('/:id', restricted, (req,res)=>{
     const person_id = req.params.person_id
     connectDB.getConnectById(person_id)
     .then(connects=>{
-        console.log(connects)
         res.status(200).json(connects)
     })
     .catch(err=>{
@@ -33,7 +31,6 @@ router.put('/:id', restricted, (req,res)=>{
     const connectId = req.params.connectId
     connectDB.updateConnect(connect_id, req.body)
     .then(success=>{
-        console.log(success)
         res.status(200).json(success)
     })
     .catch(err=>{

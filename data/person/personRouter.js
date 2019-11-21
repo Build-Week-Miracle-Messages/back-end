@@ -5,7 +5,6 @@ const restricted = require('../auth/restricted-middleware')
 router.get('/:id', (req,res)=>{
     personDB.get(req.params.id)
     .then(people=>{
-        console.log(people)
         res.status(200).json(people)
     })
     .catch(err=>{

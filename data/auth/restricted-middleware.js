@@ -13,7 +13,6 @@ module.exports = (req, res, next) =>{
 			res.status(401).json({message: "invalid credentials"})
 		  } else{
 			req.decodedJwt = decodedToken
-			console.log(decodedToken)
 			next()
 		  }
 		})
