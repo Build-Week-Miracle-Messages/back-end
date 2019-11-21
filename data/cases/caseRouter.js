@@ -74,9 +74,10 @@ router.post('/', restricted, (req,res)=>{
             })
         }
         
-        console.log('line 76',{user_id:Number(id), person_id: Number(newPerson[0]), sensitive: sensitive})
+        console.log('line 76',{user_id:Number(id), person_id: Number(newPerson[0].id]), sensitive: sensitive})
         return caseDB.addCase({user_id:Number(id), person_id: Number(newPerson[0].id), sensitive: sensitive})
         .then(_=>{
+            console.log(_, 'person[0]', person[0])
             caseDB.getPersonById(person[0])
             .then(newPerson=>{
                 return caseDB.getConnectById(newPerson.id)
