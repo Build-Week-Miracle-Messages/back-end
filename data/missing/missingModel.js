@@ -8,16 +8,16 @@ module.exports = {
 }
 
 function addMissing(obj){
-    return db('missing').insert(obj).select('*')
+    return db('missing').insert(obj).select('*').returning('*')
     // .then(() => module.exports.getMissingById(obj.id))
 }
 
-function deleteMissing(){
+function deleteMissing(id){
     return db('missing').where({id}).del()
 }
 
 function getMissing(){
-    return db('missing').select('*')
+    return db('missing').select('*').returning('*')
 }
 
 function getMissingById(id){
