@@ -9,6 +9,7 @@ const casesRouter = require('../data/cases/caseRouter')
 
 
 server.use(express.json())
+server.use(cors())
 server.get('/', (req,res)=>{
 	res.send('this port is good to GO!!')
 })
