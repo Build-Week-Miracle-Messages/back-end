@@ -12,6 +12,7 @@ const missingRouter = require('../data/missing/missingRouter')
 
 
 server.use(express.json())
+server.use(cors())
 server.get('/', (req,res)=>{
 	res.send('this port is good to GO!!')
 })
