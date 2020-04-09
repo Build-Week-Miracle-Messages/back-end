@@ -1,46 +1,128 @@
 const router = require('express').Router()
 const caseDB = require('./caseModel')
+const connectDB = require('../connect/connectModel')
 const restricted = require('../auth/restricted-middleware')
 
-router.post('/:id', restricted, (req,res)=>{
-    const personObj= req.body
+
+
+router.get('/all', restricted, (req,res)=>{
+
+    caseDB.getEveryone(req.decodedJwt.sub)
+    .then(everyone=>{
+        res.status(200).json(everyone)
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+
+router.get('/current', restricted, (req,res)=>{
+    caseDB.getUsersPersonConnects(req.decodedJwt.sub)
+    .then(peopleConnect=>{
+        res.status(200).json(peopleConnect)
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json({err:'somehting went wrong'})
+
+    })
+})
+
+router.get('/:id', restricted, (req,res)=>{
     const id = req.params.id
+    caseDB.getPersonById(id)
+    .then(person=>{
+        return caseDB.getConnectById(person.id)
+        .then(connect=>{
+            res.status(200).json({...person, connect:[...connect]})
+        })
+        .catch(err=>{
+            console.log(err)
+            res.status(400).json(err)
+
+        })
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+
+
+router.post('/', restricted, (req,res)=>{
+
+    const [personObj , id]=[req.body, req.decodedJwt.sub]
     let sensitive = personObj.sensitive
     delete personObj['sensitive']
     let [person, connect] =[{},{}];
     const keys = Object.keys(personObj)
-    keys.forEach(name=>{(name.includes('connect_'))?connect[name.split('_')[1]]=personObj[name]:person[name]=personObj[name]})
     
-    caseDB.add(id, person)
+    keys.forEach(name=>{(name.includes('connect_'))?connect[name.split('_')[1]]=personObj[name]:person[name]=personObj[name]})
+    const hasConnect = (Object.keys(connect).length>0)
+
+    caseDB.add(person)
     .then(person=>{
-        caseDB.addCase({user_id:Number(id), person_id: Number(person[0]), sensitive: sensitive})
-        caseDB.addConnect({...connect, person_id: Number(person[0])})
-        caseDB.getById(person)
-        .then(createdPerson=>{
-            res.status(200).json(createdPerson)
-        })
+        if(hasConnect){
+            connectDB.addConnect({...connect, person_id: Number(person[0])})
+            .then(success=>{
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+        }
+        return caseDB.addCase({user_id:Number(id), person_id: Number(person[0]), sensitive: sensitive})
+        .then(_=>{
+            caseDB.getPersonById(person[0])
+            .then(newPerson=>{
+                return caseDB.getConnectById(newPerson.id)
+                .then(connect=>{
+                    res.status(200).json({...newPerson, connect:[...connect]})
+                })
+                .catch(err=>{
+                    console.log(err)
+                    res.status(400).json(err)
+        
+                })
+            })
+            })
         .catch(err=>{
-            res.status(404).json({message:"something went wrong"})
+            console.log(err)
+            res.status(500).json({error:"A case could not be added due to foreign key constraint"})
         })
-        // caseDB.get
 
     })
     .catch(err=>{
+        console.log(err)
         res.status(500).json({error:"Something went wrong"})
     })
 })
 
-router.delete('/:id',(req,res)=>{
-    const id = req.params.id 
-
-    caseDB.remove(req.params.id)
-    .then(count => {
-    count?res.status(200).json({message:"success!"}):res.status(401).json({message:"that id does not exist, nothing was deleted"})
+router.delete('/:id', restricted, validateUserCase,(req,res)=>{
+    //where id is for case
+    const user_id = (req.decodedJwt.sub)
+    const id = req.params.id
+    caseDB.getCaseByID(id)
+        .then(thisCase=>{
+        caseDB.removePerson(thisCase[0].person_id)
+            .then(count => {
+                return caseDB.getUsersPerson(user_id)
+                .then(cases=>{
+                    (cases.length>0)?res.status(200).json(cases):res.status(400).json({error:"you have no cases"})
+                })
+                .catch(err=>{
+                    res.status(404).json(err)
+                })
+            
+            })
+            .catch(err=>{
+                console.log(err)
+                res.status(500).json({error: "something went wrong"})})
+            })
     })
-    .catch(err=>{res.status(500).json({error: "something went wrong"})})
-})
 
-router.delete('/person/:id',(req,res)=>{
+
+router.delete('/person/:id', restricted, validateUserCase,(req,res)=>{
     const id = req.params.id 
     caseDB.removePerson(req.params.id)
     .then(count => {
@@ -49,5 +131,37 @@ router.delete('/person/:id',(req,res)=>{
     .catch(err=>{res.status(500).json({error: "something went wrong"})})
 })
 
+router.put('/person/:id', restricted, validateUserCase,(req,res)=>{
+    const person_id = req.params.id
+    caseDB.updatePerson(person_id, req.body)
+    .then(updated=>{
+        if(updated){
+           return caseDB.getById(person_id)
+            .then(updatedPerson=>{
+                res.status(201).json(updatedPerson)
+            })
+            .catch(err=>{
+                console.log('caseRouter 120 ',err)
+                res.status(400).json(err)
+            })
+        }else{
+            res.status(400).json({message:"no one was updated"})
+        }
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+
+
+function  validateUserCase(req,res,next){
+    caseDB.getCaseByID(req.params.id)
+    .then(thisCase=>{
+        (thisCase.length===0)?res.status(404).json({error:"this case does not exist"}):(thisCase[0].user_id === req.decodedJwt.sub)? next():res.status(400).json({error:"This is not your case!"})
+    })
+}
+
 module.exports = router;
 //create middleware to create person whenever a case is created.
+

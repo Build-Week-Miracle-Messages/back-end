@@ -14,10 +14,13 @@ router.post('/register', (req,res)=>{
 		user.password = hash;
 		Users.add(user)
 		.then(saved =>{
-			res.status(201).json(saved)
+			const token = getJwtToken(user);
+			res.status(200).json({
+				...user, token:token 
+			});
 		})
 		.catch(err=>{
-			res.status(500).json(error)
+			res.status(500).json(err)
 		})
 	}else{
 		res.status(400).json({
@@ -50,9 +53,24 @@ router.post('/login', (req,res)=>{
 	})
 })
 
-router.post('/logout', (req,res)=>{
-	
-})
+// router.get('/logout', (req,res)=>{
+// 	console.log(req.headers)
+// 	if (req.headers.authorization){
+// 	  req.headers.authorization.destroy(error=>{
+// 		if(error){
+// 		  res
+// 		  .status(500)
+// 		  .json({
+// 			message:"you can check out any time you like, but you can never leave..."
+// 		  })
+// 		} else{
+// 		  res.status(200).json({message: "logged out successfully"})
+// 		}
+// 	  });
+// 	}else{
+// 	  res.status(500).json({message:"req.session was false"})
+// 	}
+//   })
 
 function getJwtToken(user){
 	const payload = {
